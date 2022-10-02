@@ -375,20 +375,21 @@
                     <div class="sidebar-category sidebar-category-visible">
                         <div class="category-content no-padding">
                             <ul class="navigation navigation-main navigation-accordion">
-
-
-                                <li class="active"><a href="{{ url('/') }}"><i class="icon-home4"></i>
+                                <li class="{{ request()->is('/') ? 'active' : '' }}"><a href="{{ url('/') }}"><i
+                                            class="icon-home4"></i>
                                         <span>Dashboard</span></a>
                                 </li>
 
-                                <li class="#"><a href="{{ url('/users') }}"><i class=" icon-user-plus"></i>
+                                <li class="{{ request()->is('users*') ? 'active' : '' }}"><a
+                                        href="{{ url('/users') }}"><i class=" icon-user-plus"></i>
                                         <span>Users</span></a>
                                 </li>
-                                <li class="#"><a href="{{ route('blogCategory.index') }}"><i
-                                            class=" icon-user-plus"></i>
+                                <li class="{{ request()->is('blogCategory/*') ? 'active' : '' }}"><a
+                                        href="{{ route('blogCategory.index') }}"><i class=" icon-user-plus"></i>
                                         <span>Blog Category</span></a>
                                 </li>
-                                <li class="#"><a href=""><i class=" icon-user-plus"></i>
+                                <li class="{{ request()->is('blog/*') ? 'active' : '' }}"><a
+                                        href="{{ route('blog.index') }}"><i class=" icon-user-plus"></i>
                                         <span>Blog</span></a>
                                 </li>
 
@@ -460,10 +461,16 @@
 
     </div>
     <!-- /page container -->
+    <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+    {!! Toastr::message() !!}
     <!-- Core JS files -->
     <script type="text/javascript" src="{{ asset('admin/assets/js/plugins/loaders/pace.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('admin/assets/js/core/libraries/jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('admin/assets/js/core/libraries/bootstrap.min.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('admin/assets/bootbox/bootbox.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('admin/assets/bootbox/bootbox.locales.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('admin/assets/js/plugins/loaders/blockui.min.js') }}"></script>
     <!-- /core JS files -->
 
@@ -475,10 +482,9 @@
     <script type="text/javascript" src="{{ asset('admin/assets/js/core/app.js') }}"></script>
     <script type="text/javascript" src="{{ asset('admin/assets/js/pages/datatables_basic.js') }}"></script>
     <!-- /theme JS files -->
+    @stack('javascript')
 
-    {{-- <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script> --}}
-    <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
-    {!! Toastr::message() !!}
+
 </body>
 
 </html>

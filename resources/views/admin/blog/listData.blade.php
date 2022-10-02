@@ -1,18 +1,13 @@
 @extends('admin.layout.default')
-@section('title', 'Blog Category')
+@section('title', 'Blog')
 @section('content')
 
     <div class="panel panel-flat">
         <div class="panel-heading">
-            <h5 class="panel-title">Blog Category</h5>
+            <h5 class="panel-title">Blog </h5>
             <div class="heading-elements">
                 <ul class="icons-list">
-                    <a href="{{ route('blogCategory.create') }}" class="btn btn-danger btn-rounded" id="open-modal">Add
-                        New</a>
-                    <button href="{{ route('blogCategory.create') }}" class="btn btn-danger btn-rounded  show_alert"
-                        id="open-modal">show model
-                    </button>
-
+                    <a href="{{ route('blog.create') }}" class="btn btn-danger btn-rounded">Add New</a>
 
                 </ul>
             </div>
@@ -22,20 +17,30 @@
             <thead>
                 <tr>
                     <th>Sl</th>
-                    <th>Name</th>
-                    <th>Status</th>
+                    <th>Category</th>
+                    <th>Title</th>
+                    <th>Descripton</th>
+                    <th>Thamnail</th>
+                    <th>status</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @if (!empty($blogCategories))
-                    @foreach ($blogCategories as $key => $category)
+                @if (!empty($blogs))
+                    @foreach ($blogs as $key => $blog)
                         <tr>
                             <td>{{ ++$key }}</td>
-                            <td>{{ $category->name }}</td>
+                            <td>{{ $blog->name }}</td>
+                            <td>{{ $blog->title }}</td>
+                            <td>{{ $blog->description }}</td>
+                            <td>
+                                <img class="img-fluid" height="120px" width="150px"
+                                    src="{{ asset('upload/blogTham/' . $blog->thumbnail) }}" alt="">
+                            </td>
+
                             <td>
 
-                                @if ($category->valid == 1)
+                                @if ($blog->valid == 1)
                                     <span class="label label-success">Active</span>
                                 @else
                                     <span class="label label-danger">In Active</span>
@@ -44,9 +49,9 @@
 
 
                             <td class="text-center">
-                                <a href="{{ route('blogCategory.edit', $category->id) }}"><i class=" icon-pencil5"></i></a>
+                                <a href="{{ route('blog.edit', $blog->id) }}"><i class=" icon-pencil5"></i></a>
 
-                                <form action="{{ route('blogCategory.destroy', $category->id) }}" method="POST">
+                                <form action="{{ route('blog.destroy', $blog->id) }}" method="POST">
                                     @method('DELETE')
                                     @csrf
                                     <button type="submit"><i class=" icon-trash"></i></button>
@@ -67,12 +72,3 @@
     </div>
 
 @endsection
-@push('javascript')
-    <script>
-        $(document).on("click", ".show_alert", function(e) {
-            bootbox.alert("Hello world!", function() {
-                console.log("Alert Callback");
-            });
-        });
-    </script>
-@endpush

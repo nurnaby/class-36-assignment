@@ -35,3 +35,4 @@ Route::put('users/edit/{id}',[App\Http\Controllers\Admin\UserController::class,'
 Route::delete('users/delete/{id}',[App\Http\Controllers\Admin\UserController::class,'delete']);
  
 Route::resource('blogCategory', App\Http\Controllers\Admin\BlogCategoryController::class);
+Route::resource('blog', App\Http\Controllers\Admin\BlogController::class);

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Blog;
+
 use App\Models\BlogCategory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -9,9 +11,9 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Validator;
 
 
-class BlogCategoryController extends Controller
+class BlogController extends Controller
 {
-
+    
     /**
      * Display a listing of the resource.
      *
@@ -20,9 +22,9 @@ class BlogCategoryController extends Controller
     public function index()
     {
         // $data['blogCategories'] = BlogCategory::withTrashed()->get();
-        $data['blogCategories'] = BlogCategory::get();
+        $data['blogs'] = Blog::join('blog_categories','blog_categories.id','=','blogs.category')->select('blogs.*','blog_categories.name')->get();
 
-        return view('admin.blogCategory.listData',$data);
+        return view('admin.blog.listData',$data);
     }
 
     /**
@@ -32,7 +34,8 @@ class BlogCategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.blogCategory.create'); 
+        $data['blogCategories']=BlogCategory::get();
+        return view('admin.blog.create',$data); 
     }
 
     /**
@@ -45,20 +48,26 @@ class BlogCategoryController extends Controller
     {
         
         $validator = validator::make($request->all(),[
-            'name'=> 'required',
-            'valid'=> 'required'
+            'category'=> 'required',
+            'title'=> 'required'
         ]);
         if($validator->passes()){
+           
+           
             // $obj = new BlogCategory();
             // $obj->name = $request->name;
             // $obj->valid = $request->valid;
             // $obj->save();
 
-            BlogCategory::create([
-                'name'=>$request->name,
+            Blog::create([
+                'category'=>$request->category,
+                'title'=>$request->title,
+                'sub-title'=>$request->sub_title,
+                'description'=>$request->description,
+                'thumbnail'=>self::fileUploader($request->thumbnail,public_path('upload/blogTham')),
                 'valid'=>$request->valid,
             ]);
-            Toastr::success('Category created successfully','success');
+            Toastr::success('blog created successfully','success');
         }else{
             $errMsgs = $validator->messages();
             foreach($errMsgs->all() as $msg){
@@ -90,9 +99,10 @@ class BlogCategoryController extends Controller
      */
     public function edit($id)
     {
-        $data ['blogCategoryInfo'] =BlogCategory::find($id);
+        $data['bloginfo'] = Blog::join('blog_categories','blog_categories.id','=','blogs.category')->select('blogs.*','blog_categories.id,name')->find($id);
         
-        return view('admin.blogCategory.edit',$data);
+        
+        return view('admin.blog.edit',$data);
     }
 
     /**
@@ -110,7 +120,7 @@ class BlogCategoryController extends Controller
         ]);
         if($validator->passes()){
 
-            BlogCategory::find($id)->update([
+            Blog::find($id)->update([
                 'name'=>$request->name,
                 'valid'=>$request->valid,
                 
@@ -135,9 +145,14 @@ class BlogCategoryController extends Controller
      */
     public function destroy($id)
     {
-        BlogCategory::find($id)->delete();
-        Toastr::success('blog Category delete successfully','success');
+        Blog::find($id)->delete();
+        Toastr::success('blog  delete successfully','success');
         return redirect()->back();
+    }
+    public static function fileUploader($mainFile,$path){
+        $fileName= time().'.'.$mainFile->extension();
+        $mainFile->move($path,$fileName);
+        return $fileName;
     }
     
 }
