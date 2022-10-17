@@ -481,8 +481,9 @@
 
     <script type="text/javascript" src="{{ asset('admin/assets/js/core/app.js') }}"></script>
     <script type="text/javascript" src="{{ asset('admin/assets/js/pages/datatables_basic.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('admin/assets/js/costome.js') }}"></script>
     <!-- /theme JS files -->
-    @stack('javascript')
+    {{-- @stack('javascript') --}}
 
 
 </body>

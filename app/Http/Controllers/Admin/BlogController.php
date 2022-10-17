@@ -49,7 +49,9 @@ class BlogController extends Controller
         
         $validator = validator::make($request->all(),[
             'category'=> 'required',
-            'title'=> 'required'
+            'title'=> 'required',
+            'description'=> 'required',
+            'thumbnail'=> 'required'
         ]);
         if($validator->passes()){
            
@@ -99,10 +101,12 @@ class BlogController extends Controller
      */
     public function edit($id)
     {
-        $data['bloginfo'] = Blog::join('blog_categories','blog_categories.id','=','blogs.category')->select('blogs.*','blog_categories.id,name')->find($id);
-        
+       
+        $data['blogInfo'] = Blog::find($id);
+        $data['blogCategories'] = BlogCategory::get();
         
         return view('admin.blog.edit',$data);
+        
     }
 
     /**
@@ -115,18 +119,21 @@ class BlogController extends Controller
     public function update(Request $request, $id)
     {
         $validator = validator::make($request->all(),[
-            'name'=> 'required',
+            'title'=> 'required',
             'valid'=> 'required'
         ]);
         if($validator->passes()){
 
             Blog::find($id)->update([
-                'name'=>$request->name,
+                'category'=>$request->category,
+                'title'=>$request->title,
+                'description'=>$request->description,
+                'thumbnail'=>self::fileUploader($request->thumbnail,public_path('upload/blogTham')),
                 'valid'=>$request->valid,
                 
                 
             ]);
-            Toastr::success('Blog Category update successfully','success');
+            Toastr::success('Blog  update successfully','success');
         }else{
             $errMsgs = $validator->messages();
             foreach($errMsgs->all() as $msg){
@@ -145,8 +152,13 @@ class BlogController extends Controller
      */
     public function destroy($id)
     {
-        Blog::find($id)->delete();
-        Toastr::success('blog  delete successfully','success');
+        $blog_delete = Blog::find($id);
+        $file_name = $blog_delete->thumbnail;
+        $file_path = public_path('upload/blogTham/'.$file_name);
+        unlink($file_path);
+        $blog_delete->delete();
+        return response()->json(['status'=>'blog deleted successfully']);
+        // Toastr::success('blog  delete successfully','success');
         return redirect()->back();
     }
     public static function fileUploader($mainFile,$path){

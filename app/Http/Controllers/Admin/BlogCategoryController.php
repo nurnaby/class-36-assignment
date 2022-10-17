@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
+
 
 
 class BlogCategoryController extends Controller
@@ -136,6 +138,9 @@ class BlogCategoryController extends Controller
     public function destroy($id)
     {
         BlogCategory::find($id)->delete();
+        Alert::warning('delete', 'delete bloge categoriy');
+
+
         Toastr::success('blog Category delete successfully','success');
         return redirect()->back();
     }

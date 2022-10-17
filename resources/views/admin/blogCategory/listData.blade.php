@@ -1,5 +1,7 @@
 @extends('admin.layout.default')
 @section('title', 'Blog Category')
+
+
 @section('content')
 
     <div class="panel panel-flat">
@@ -7,11 +9,9 @@
             <h5 class="panel-title">Blog Category</h5>
             <div class="heading-elements">
                 <ul class="icons-list">
-                    <a href="{{ route('blogCategory.create') }}" class="btn btn-danger btn-rounded" id="open-modal">Add
+                    <a href="{{ route('blogCategory.create') }}" class="btn btn-danger btn-rounded open_model"
+                        selector="blogCreate" model_title="Blog Category Create" model_type="Submit">Add
                         New</a>
-                    <button href="{{ route('blogCategory.create') }}" class="btn btn-danger btn-rounded  show_alert"
-                        id="open-modal">show model
-                    </button>
 
 
                 </ul>
@@ -44,12 +44,14 @@
 
 
                             <td class="text-center">
-                                <a href="{{ route('blogCategory.edit', $category->id) }}"><i class=" icon-pencil5"></i></a>
+                                <a href="{{ route('blogCategory.edit', $category->id) }}" class="open_model"
+                                    model_title="Block Update" model_type="Update" selector="blogUpdate"><i
+                                        class=" icon-pencil5 "></i></a>
 
                                 <form action="{{ route('blogCategory.destroy', $category->id) }}" method="POST">
                                     @method('DELETE')
                                     @csrf
-                                    <button type="submit"><i class=" icon-trash"></i></button>
+                                    <button type="submit"><i class=" icon-trash blogDelete"></i></button>
                                 </form>
                             </td>
 
@@ -65,14 +67,5 @@
         </table>
 
     </div>
-
+    @include('sweetalert::alert')
 @endsection
-@push('javascript')
-    <script>
-        $(document).on("click", ".show_alert", function(e) {
-            bootbox.alert("Hello world!", function() {
-                console.log("Alert Callback");
-            });
-        });
-    </script>
-@endpush
